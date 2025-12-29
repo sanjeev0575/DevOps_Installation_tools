@@ -1,3 +1,6 @@
+#!/bin/bash
+# script to install Jenkins on a Linux system
+
 sudo apt update
 sudo apt install fontconfig openjdk-21-jre
 java -version
