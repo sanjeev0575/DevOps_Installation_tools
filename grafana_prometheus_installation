@@ -1,0 +1,53 @@
+#/bin/bash
+
+# Install Grafana on Ubuntu
+
+sudo apt-get install -y apt-transport-https wget gnupg
+
+sudo mkdir -p /etc/apt/keyrings/
+wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
+
+echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+
+# Updates the list of available packages
+sudo apt-get update
+
+# Installs the latest OSS release:
+sudo apt-get install grafana
+
+# Installs the latest Enterprise release:
+sudo apt-get install grafana-enterprise
+
+# Create Grafana User
+
+sudo chown -R grafana:grafana /usr/local/grafana
+
+# Create a Grafana server systemd unit file:
+
+sudo touch /etc/systemd/system/grafana-server.service
+
+# Add the following to the unit file in a text editor of your choice:
+
+# [Unit]
+# Description=Grafana Server
+# After=network.target
+
+# [Service]
+# Type=simple
+# User=grafana
+# Group=users
+# ExecStart=/usr/local/grafana/bin/grafana server --config=/usr/local/grafana/conf/grafana.ini --homepath=/usr/local/grafana
+# Restart=on-failure
+
+# [Install]
+# WantedBy=multi-user.target
+
+# Uninstall on Debian or Ubuntu
+
+# If you configured Grafana to run with systemd, stop the systemd service for Grafana server:
+
+# sudo systemctl stop grafana-server
+
+# If you configured Grafana to run with init.d, stop the init.d service for Grafana server:
+
+# sudo service grafana-server stop
